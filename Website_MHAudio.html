@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matt Hollis Audio Services</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,700;1,200;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --gold:      #F5C842;
+      --gold-dark: #C9A020;
+      --bg:        #080808;
+      --bg2:       #0f0f0f;
+      --text:      #f0ece4;
+      --text-dim:  #6a6560;
+      --text-mid:  #9a9590;
+      --border:    rgba(245,200,66,0.14);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 400;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 3rem;
+      background: rgba(8,8,8,0.93);
+      backdrop-filter: blur(12px);
+      border-bottom: 0.5px solid var(--border);
+    }
+    .nav-brand { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+    .nav-brand svg { width: 36px; height: 36px; flex-shrink: 0; }
+    .nav-brand-text { display: flex; flex-direction: column; align-items: center; line-height: 1; }
+    .nav-brand-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.4rem; font-weight: bold;
+      letter-spacing: 0.24em; text-transform: uppercase; color: var(--text);
+    }
+    .nav-brand-sub {
+      font-size: 0.8rem; letter-spacing: 0.28em;
+      text-transform: uppercase; color: var(--gold);
+      font-weight: 200; margin-top: 4px;
+    }
+    .nav-links { display: flex; align-items: center; gap: 2.5rem; }
+    .nav-links a {
+      font-size: 0.9rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--text-dim);
+      text-decoration: none; transition: color 0.25s; font-weight: bold;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-cta {
+      color: #000 !important; background: var(--gold);
+      padding: 0.5rem 1.3rem;
+      transition: background 0.2s !important; font-weight: bold !important;
+    }
+    .nav-cta:hover { background: var(--gold-dark) !important; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 8rem 2rem 5rem;
+      position: relative; overflow: hidden;
+      border-bottom: 0.5px solid var(--border);
+    }
+    .hero-glow {
+      position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse 60% 50% at 50% 60%, rgba(245,200,66,0.05) 0%, transparent 70%);
+    }
+    .hero-vline {
+      position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+    }
+    .hero-vline::before {
+      content: ''; position: absolute; top: 0; left: 50%;
+      width: 0.8px; height: 100%;
+      background: linear-gradient(to bottom, transparent, rgba(245,200,66,0.05), transparent);
+    }
+    .hero-logo-wrap {
+      position: relative; margin-bottom: 3rem;
+      animation: fadeUp 0.5s 0.1s ease both;
+    }
+    .hero-logo-wrap svg { width: 130px; height: 130px; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-eyebrow {
+      font-size: 0.9rem; letter-spacing: 0.38em;
+      text-transform: uppercase; color: var(--text-dim);
+      margin-bottom: 0.7rem; font-weight: 300;
+      animation: fadeUp 0.7s 1.8s ease both;
+    }
+    .hero-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(3rem, 4.5vw, 4rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: 0.14em; color: var(--text);
+      text-transform: uppercase; margin-bottom: 0.2rem;
+      animation: fadeUp 0.7s 2.05s ease both;
+    }
+    .hero-title em {
+      color: var(--gold); font-style: normal;
+      font-weight: 200;
+      letter-spacing: 0.22em;
+    }
+    .hero-divider {
+      width: 48px; height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      margin: 1.5rem auto;
+      animation: fadeUp 0.7s 2.4s ease both;
+    }
+    .hero-tagline {
+      font-size: 0.8rem; letter-spacing: 0.32em;
+      text-transform: uppercase; color: var(--text-dim); font-weight: 300;
+      animation: fadeUp 0.7s 2.3s ease both;
+    }
+    .hero-tagline span { color: var(--gold); margin: 0 0.6rem; }
+    .hero-scroll {
+      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      opacity: 0.35; animation: fadeUp 0.7s 2.6s ease both;
+    }
+    .hero-scroll span {
+      font-size: 0.48rem; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--gold); font-weight: 300;
+    }
+    .hero-scroll-line {
+      width: 0.5px; height: 30px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollPulse 2.2s 3.2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; transform: scaleY(1); transform-origin: top; }
+      50%       { opacity: 1;   transform: scaleY(1.3); transform-origin: top; }
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-size: 0.9rem; letter-spacing: 0.35em;
+      text-transform: uppercase; color: var(--gold);
+      padding: 2.5rem 3rem 1.5rem; font-weight: bold;
+    }
+
+    /* ── SERVICES ── */
+    .services {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      border-bottom: 0.5px solid var(--border);
+    }
+    .service-item {
+      padding: 2.5rem 3rem;
+      border-right: 0.5px solid var(--border);
+      transition: background 0.3s; position: relative;
+    }
+    .service-item:last-child { border-right: none; }
+    .service-item::after {
+      content: ''; position: absolute;
+      bottom: 0; left: 3rem; right: 3rem; height: 1px;
+      background: var(--gold); transform: scaleX(0); transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+    .service-item:hover { background: rgba(245,200,66,0.02); }
+    .service-item:hover::after { transform: scaleX(1); }
+    .service-num {
+      font-size: 0.9rem; letter-spacing: 0.22em;
+      color: var(--gold); margin-bottom: 1.2rem; font-weight: bold;
+    }
+    .service-icon { margin-bottom: 1.4rem; opacity: 0.55; }
+    .service-icon svg { width: 26px; height: 26px; }
+    .service-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem; font-weight: bold;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--text); margin-bottom: 0.75rem;
+    }
+    .service-desc {
+      font-size: 0.76rem; color: var(--text-mid);
+      line-height: 1.8; font-weight: 200;
+    }
+
+    /* ── WORK GRID ── */
+    .work-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      border-top: 0.5px solid var(--border);
+    }
+    .work-item {
+      border-right: 0.5px solid var(--border);
+      border-bottom: 0.5px solid var(--border);
+      position: relative; overflow: hidden; cursor: pointer;
+      aspect-ratio: 16/10; background: var(--bg2);
+    }
+    /* Featured tile spans full width */
+    .work-item--featured {
+      grid-column: 1 / -1;
+      aspect-ratio: 21/9;
+      border-right: none;
+    }
+    /* Border logic for the 6 regular tiles beneath the featured one */
+    .work-item:not(.work-item--featured):nth-child(3n+2) { border-right: none; }
+    .work-item:not(.work-item--featured):nth-child(3n) { border-right: 0.5px solid var(--border); }
+    /* Featured tile title is bigger */
+    .work-item--featured .work-title { font-size: 1.1rem; font-weight: 200; }
+    .work-item--featured .work-client { font-size: 0.75rem; }
+    /* ── WORK BG IMAGE ── */
+.work-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* IMAGE */
+.work-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  opacity: 0.5;
+  filter: grayscale(10%) contrast(1.95);
+   filter: saturate(1.75);
+
+  transition: 
+    opacity 0.5s ease,
+    filter 0.8s ease,
+    transform 0.6s ease;
+}
+
+/* TINT OVERLAY */
+.work-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transition: opacity 20s ease;
+}
+
+/* HOVER STATE */
+.work-item:hover .work-bg img {
+  opacity: 80;
+  filter: blur(4px);
+  transform: scale(1.05);
+}
+
+.work-item:hover .work-bg::after {
+  opacity: 20;
+}
+   .work-item:hover .work-bg { opacity: 0.3; }
+    .work-client {
+      font-size: 0.95rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 0.3rem; font-weight: 300;
+      opacity: 0; transform: translateY(5px);
+      transition: opacity 0.8s 0.05s, transform 0.3s 0.05s;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.9), 0 2px 14px rgba(0,0,0,0.7);
+    }
+    .work-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem; font-weight: 300;
+      letter-spacing: 0.1em; color: var(--text);
+      line-height: 1.25; margin-bottom: 0.25rem; text-transform: uppercase;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.95), 0 3px 18px rgba(0,0,0,0.8);
+    }
+    .work-role {
+      font-size: 0.85rem; color: var(--text-mid); font-weight: 200;
+      opacity: 0; transform: translateY(4px);
+      transition: opacity 0.3s 0.1s, transform 0.3s 0.1s;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.9), 0 2px 12px rgba(0,0,0,0.7);
+    }
+    .work-item:hover .work-client,
+    .work-item:hover .work-role { opacity: 2; transform: translateY(0); }
+    .work-view {
+      position: absolute; bottom: 1.2rem; right: 1.2rem;
+      font-size: 0.48rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); border: 0.5px solid rgba(245,200,66,0.35);
+      padding: 0.3rem 0.6rem; font-weight: 300;
+      opacity: 0; transform: translateY(-4px);
+      transition: opacity 0.8s, transform 0.25s;
+    }
+    .work-item:hover .work-view { opacity: 0.1; transform: translateY(0); }
+
+    /* ── ABOUT ── */
+    .about-section {
+      display: grid; grid-template-columns: 1.1fr 0.9fr;
+      border-top: 0.5px solid var(--border);
+    }
+    .about-text { padding: 4rem 3rem; border-right: 0.5px solid var(--border); }
+    .about-text h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+      font-weight: bold; color: var(--text);
+      margin-bottom: 1.75rem; line-height: 1.3;
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .about-text h2 em { color: var(--gold); font-style: normal; }
+    .about-text p {
+      font-size: 0.8rem; color: var(--text-mid);
+      line-height: 1.9; margin-bottom: 1.1rem; font-weight: 300;
+    }
+    .about-text p:last-of-type { margin-bottom: 2rem; }
+    .about-link {
+      font-size: 0.7rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--gold);
+      text-decoration: none;
+      border-bottom: 0.5px solid rgba(245,200,66,0.3);
+      padding-bottom: 2px; transition: border-color 0.2s; font-weight: 300;
+    }
+    .about-link:hover { border-color: var(--gold); }
+    .about-stats {
+      padding: 4rem 3rem;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 2.5rem; align-content: start;
+    }
+    .stat { border-top: 0.5px solid var(--border); padding-top: 1rem; }
+    .stat-num {
+        
+      font-family: 'Montserrat', sans-serif;
+      font-size: 3rem; font-weight: bold;
+      color: var(--gold); line-height: 1; margin-bottom: 0.3rem;
+ 
+    }
+    .stat-label {
+      font-size: 0.9rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--text-dim); font-weight: 300;
+    }
+
+    /* ── CLIENTS ── */
+    .clients-section {
+      border-top: 0.5px solid var(--border);
+      padding: 1.8rem 3rem;
+      display: flex; align-items: center; gap: 2.8rem; flex-wrap: wrap;
+    }
+    .clients-label {
+      font-size: 1.5rem; letter-spacing: 0.28em;
+      text-transform: uppercase; color: var(--gold);
+      white-space: nowrap; flex-shrink: 0; font-weight: 900;
+    }
+    .clients-divider { width: 0.5px; height: 18px; background: var(--border); }
+    .client-name {
+      font-size: 0.9rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--text-dim);
+      font-weight: thin; transition: color 0.2s;
+    }
+    .client-name:hover { color: var(--text-mid); }
+
+    /* ── CONTACT ── */
+    .contact-section {
+      border-top: 0.5px solid var(--border);
+      display: grid; grid-template-columns: 1fr 1fr;
+    }
+    .contact-left {
+      padding: 4rem 3rem; border-right: 0.5px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .contact-left::before {
+      content: ''; position: absolute; bottom: -60px; left: -60px;
+      width: 240px; height: 240px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(245,200,66,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .contact-left h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+      font-weight: bold; color: var(--text);
+      line-height: 1.25; margin-bottom: 1rem;
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .contact-left h2 span { color: var(--gold); }
+    .contact-left p {
+      font-size: 0.8rem; color: var(--text-mid);
+      line-height: 1.85; margin-bottom: 2rem;
+      max-width: 400px; font-weight: 300;
+    }
+    .contact-btn {
+      display: inline-block;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem; letter-spacing: 0.26em;
+      text-transform: uppercase; font-weight: bold;
+      color: #000; background: var(--gold);
+      padding: 0.9rem 2.2rem; text-decoration: none;
+      transition: background 0.2s, letter-spacing 0.25s;
+    }
+    .contact-btn:hover { background: var(--gold-dark); letter-spacing: 0.32em; }
+    .contact-right { padding: 4rem 3rem; }
+    .contact-detail { margin-bottom: 2rem; }
+    .contact-detail-label {
+      font-size: 0.9rem; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 0.4rem; font-weight: bold;
+    }
+    .contact-detail-val {
+      font-size: 0.9rem; color: var(--text-mid); font-weight: 200;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 0.5px solid var(--border);
+      padding: 1.75rem 3rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-brand { display: flex; align-items: center; gap: 10px; }
+    .footer-brand svg { width: 22px; height: 22px; }
+    .footer-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.6rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--gold); font-weight: 300;
+    }
+    .footer-copy {
+      font-size: 0.54rem; letter-spacing: 0.1em;
+      color: var(--text-dim); font-weight: 200;
+    }
+
+    /* ── VIDEO MODAL ── */
+    .video-modal-backdrop {
+      display: none;
+      position: fixed; inset: 0; z-index: 2000;
+      background: rgba(0,0,0,0.88);
+      backdrop-filter: blur(6px);
+      align-items: center; justify-content: center;
+    }
+    .video-modal-backdrop.open { display: flex; }
+    .video-modal {
+      position: relative;
+      width: min(880px, 92vw);
+      background: #0f0f0f;
+      border: 0.5px solid rgba(245,200,66,0.2);
+      box-shadow: 0 0 60px rgba(0,0,0,0.8);
+      animation: modalIn 0.25s ease;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.96) translateY(12px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .video-modal-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      padding: 1.1rem 1.4rem 0.8rem;
+      border-bottom: 0.5px solid rgba(245,200,66,0.1);
+    }
+    .video-modal-meta { display: flex; flex-direction: column; gap: 0.2rem; }
+    .video-modal-client {
+      font-size: 0.6rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--gold); font-weight: 300;
+    }
+    .video-modal-title {
+      font-size: 0.78rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--text); font-weight: 300;
+    }
+    .video-modal-close {
+      background: none; border: none; cursor: pointer;
+      color: var(--text-dim); font-size: 1.2rem; line-height: 1;
+      padding: 0.1rem 0.3rem; transition: color 0.2s;
+      flex-shrink: 0; margin-left: 1rem;
+    }
+    .video-modal-close:hover { color: var(--gold); }
+    .video-modal-body {
+      position: relative; width: 100%; padding-bottom: 56.25%;
+      background: #000;
+    }
+    .video-modal-body iframe {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; border: none;
+    }
+    .video-modal-placeholder {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 0.8rem;
+      color: var(--text-dim);
+    }
+    .video-modal-placeholder svg { opacity: 0.3; }
+    .video-modal-placeholder p {
+      font-size: 0.65rem; letter-spacing: 0.22em;
+      text-transform: uppercase; opacity: 0.45;
+    }
+
+    /* ── SCROLL ANIMATIONS ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 2s ease, transform 2s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-56px);
+      transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-stagger > * {
+      opacity: 0; transform: translateY(18px);
+      transition: opacity 0.6s ease, transform 1s ease;
+    }
+    .reveal-stagger.visible > *:nth-child(1) { opacity:1; transform:translateY(0); transition-delay:0s; }
+    .reveal-stagger.visible > *:nth-child(2) { opacity:1; transform:translateY(0); transition-delay:0.2s; }
+    .reveal-stagger.visible > *:nth-child(3) { opacity:1; transform:translateY(0); transition-delay:0.4s; }
+    .reveal-stagger.visible > *:nth-child(4) { opacity:1; transform:translateY(0); transition-delay:0.6s; }
+    .reveal-stagger.visible > *:nth-child(5) { opacity:1; transform:translateY(0); transition-delay:0.8s; }
+    .reveal-stagger.visible > *:nth-child(6) { opacity:1; transform:translateY(0); transition-delay:1s; }
+    .reveal-stagger.visible > *:nth-child(7) { opacity:1; transform:translateY(0); transition-delay:1.2s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 0.9rem 1.5rem; }
+      .nav-links a:not(.nav-cta) { display: none; }
+      .hero { padding: 7rem 1.5rem 4rem; }
+      .section-label { padding: 2rem 1.5rem 1rem; }
+      .services { grid-template-columns: 1fr; }
+      .service-item { border-right: none; border-bottom: 0.5px solid var(--border); padding: 2rem 1.5rem; }
+      .service-item::after { left: 1.5rem; right: 1.5rem; }
+      .work-grid { grid-template-columns: 1fr 1fr; }
+      .work-item:nth-child(2n) { border-right: none; }
+      .work-item:nth-child(3n) { border-right: 0.5px solid var(--border); }
+      .about-section { grid-template-columns: 1fr; }
+      .about-text { border-right: none; border-bottom: 0.5px solid var(--border); padding: 2.5rem 1.5rem; }
+      .about-stats { padding: 2.5rem 1.5rem; }
+      .contact-section { grid-template-columns: 1fr; }
+      .contact-left { border-right: none; border-bottom: 0.5px solid var(--border); padding: 2.5rem 1.5rem; }
+      .contact-right { padding: 2.5rem 1.5rem; }
+      .clients-section { padding: 1.5rem; gap: 1.5rem; }
+      footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!--
+    ═══════════════════════════════════════════════════════
+    WAVEFORM PATH GUIDE
+    ═══════════════════════════════════════════════════════
+    Traced from the reference image. The waveform has:
+    - Flat baseline at y=50 (midline)
+    - Small ripples on outer edges
+    - Progressively taller peaks building toward centre
+    - The tallest spike is the 2nd-from-centre pair (not the innermost)
+    - Innermost spike is slightly shorter than its neighbours
+    - Perfect left/right symmetry about x=50
+
+    For the 200×200 hero SVG (baseline y=100):
+      Outer flat → tiny ripple → small wave → medium wave →
+      tall spike → TALLEST spike → tall spike → centre flat →
+      mirror right half
+
+    For the 100×100 nav/footer SVG (baseline y=50):
+      Same shape scaled to half coordinates
+    ═══════════════════════════════════════════════════════
+  -->
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-brand" href="#">
+      <!--
+        100×100 nav logo.
+        Baseline y=50. Circle r=44, cx=cy=50.
+        Waveform traced to match reference — small outer ripples,
+        building to tall spikes, with the 2nd-inward pair being tallest.
+      -->
+      <svg viewBox="0 0 28 28" fill="none">
+          <circle cx="14" cy="14" r="11" stroke="#F5C842" stroke-width="1.2"/>
+          <path d="M2 14 L5 14 L6.5 9 L8 19 L9.5 6 L11 22 L12.5 11 L14 17 L15.5 5 L17 23 L18.5 12 L20 16 L21.5 14 L26 14"
+            stroke="#F5C842" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="nav-brand-text">
+        <span class="nav-brand-name">Matt Hollis</span>
+        <span class="nav-brand-sub">— Audio Services —</span>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#contact" class="nav-cta">Contact</a>
+    </div>
+  </nav>
+<!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-vline"></div>
+
+    <div class="hero-logo-wrap">
+      <!--
+        200×200 hero logo. Baseline y=100. Circle r=88.
+        The waveform animates from invisible (dashoffset=full length) to drawn.
+        Final resting shape matches the reference image exactly.
+
+        Sequence from outside-in (left side, mirrored on right):
+          flat → tiny ripple (±3) → small wave (±8) → medium (±15) →
+          growing (±23) → tall (±32) → TALLEST (±44) → tall (±36) →
+          medium-tall (±28) → short settle (±6) → flat centre
+      -->
+      <svg id="hero-logo" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle id="lc" cx="100" cy="100" r="88"
+          stroke="white" stroke-width="4"
+          stroke-dasharray="553" stroke-dashoffset="553"/>
+        <line id="ll" x1="12" y1="100" x2="188" y2="100"
+          stroke="#F5C842" stroke-width="2"
+          stroke-dasharray="176" stroke-dashoffset="176"/>
+        <path id="lw" d="
+              M20 100
+         L 50,100
+    L 58,80
+    L 66,110
+    L 78,65
+    L 85,135
+    L 90,40
+    L 95,160                    
+    L 98,50
+    L 100,140
+    L 110,60
+    L 115,145
+    L 120,75
+    L 130,125
+    L 145,95
+    L 160,100
+    
+        "
+          stroke="#F5C842" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"
+          stroke-dasharray="960" stroke-dashoffset="960"/>
+      </svg>
+    </div>
+
+
+    <p class="hero-eyebrow">Freelance Audio Engineer &amp; Mixer</p>
+    <h1 class="hero-title">Matt Hollis<br><em>Audio Services</em></h1>
+    <div class="hero-divider"></div>
+    <p class="hero-tagline">
+      Audio Mixing <span>/</span> Sound Design <span>/</span> Audio Post
+    </p>
+
+    <div class="hero-scroll">
+      <div class="hero-scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <div class="section-label reveal">— Services</div>
+  <section class="services">
+    <div class="service-item reveal">
+      <div class="service-icon">
+       <svg viewBox="0 0 28 28" fill="none">
+          <circle cx="14" cy="14" r="11" stroke="#F5C842" stroke-width="1.2"/>
+          <path d="M8 14 L5 14 L6.5 9 L8 19 L9.5 6 L11 22 L12.5 11 L14 17 L15.5 5 L17 23 L18.5 12 L20 16 L21.5 14 L26 14"
+            stroke="#F5C842" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="service-num">01</div>
+      <div class="service-title">Audio Mixing</div>
+      <p class="service-desc">Broadcast, film and commercial mixes. Clarity and impact from first listen to final delivery. Every mix shaped to serve the story.</p>
+    </div>
+    <div class="service-item reveal">
+      <div class="service-icon">
+        <svg viewBox="0 0 28 28" fill="none">
+          <circle cx="14" cy="14" r="11" stroke="#F5C842" stroke-width="1.2"/>
+          <path d="M2 14 L5 14 L6.5 9 L8 19 L9.5 6 L11 22 L12.5 11 L14 17 L15.5 5 L17 23 L18.5 12 L20 16 L21.5 14 L26 14"
+            stroke="#F5C842" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="service-num">02</div>
+      <div class="service-title">Sound Design</div>
+      <p class="service-desc">Original sonic worlds built from scratch. From hyper-realistic atmospheres to abstract conceptual soundscapes. Sound as storytelling.</p>
+    </div>
+    <div class="service-item reveal">
+      <div class="service-icon">
+        <svg viewBox="0 0 28 28" fill="none">
+          <circle cx="14" cy="14" r="11" stroke="#F5C842" stroke-width="1.2"/>
+          <path d="M2 14 L5 14 L6.5 9 L8 19 L9.5 6 L11 22 L12.5 11 L14 17 L15.5 5 L17 23 L18.5 12 L20 16 L21.5 14 L26 14"
+            stroke="#F5C842" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="service-num">03</div>
+      <div class="service-title">Audio Post</div>
+      <p class="service-desc">End-to-end post-production audio for film, TV, documentary and digital campaigns. Seamless delivery across all broadcast standards.</p>
+    </div>
+  </section>
+
+   <!-- WORK -->
+  <div id="work" class="section-label reveal" style="padding-top:3rem;">— Selected Work</div>
+  <section class="work-grid">
+
+    <!-- SHOWREEL — full-width featured tile -->
+    <div class="work-item work-item--featured" data-video-url="https://player.vimeo.com/video/1183335540?" data-client="Showreel" data-title="Showreel 2026">
+      <div class="work-bg">
+        <img src="https://s13.gifyu.com/images/bqQZO.gif" alt="Showreel 2026">
+      </div>
+      <div class="work-overlay">
+        <div class="work-client">Showreel</div>
+        <div class="work-title">Showreel 2026</div>
+        <div class="work-role">VO recording &amp; Sound Design &amp; Mix</div>
+      </div>
+      <div class="work-view">— view —</div>
+    </div>
+
+    <!-- ROW 1 -->
+    <div class="work-item reveal" data-video-url="https://player.vimeo.com/video/1183177599?" data-client="Advertising" data-title="Just Eat X Katy Perry — Did Somebody Say">
+     <div class="work-bg">
+  <img src="https://s13.gifyu.com/images/bqQUM.gif" alt="Just Eat Katy Perry">
+</div>
+      <div class="work-overlay">
+        <div class="work-client">Advertising</div>
+        <div class="work-title">Just Eat X Katy Perry - Did Somebody Say</div>
+        <div class="work-role">Large Scale Localisation of mnemonic &amp; Sound Mixes</div>
+      </div>
+      <div class="work-view">— view —</div>
+    </div>
+
+    <div class="work-item reveal" data-video-url="https://player.vimeo.com/video/1183414523?" data-client="Advertising" data-title="Amazon Highlights">
+     <div class="work-bg">
+  <img src="https://s13.gifyu.com/images/bquc6.gif" alt="Amazon Highlights">
+</div>
+      <div class="work-overlay">
+        <div class="work-client">Advertising</div>
+        <div class="work-title">Amazon Highlights</div>
+        <div class="work-role">Local Recording &amp; Sound Mix &amp; Sound Design &amp; Creative</div>
+      </div>
+      <div class="work-view">— view —</div>
+    </div>
+
+    <div class="work-item reveal" data-video-url="https://player.vimeo.com/video/1183180866?" data-client="Advertising" data-title="Nissan Highlights">
+      <div class="work-bg">
+  <img src="https://cdn.flixel.com/flixel/mzgtq7epdt5k48ma0it8.gif?v=1" alt="Nissan Highlights">
+</div>
+      <div class="work-overlay">
+        <div class="work-client">Advertising</div>
+        <div class="work-title">Nissan Highlights</div>
+        <div class="work-role">Sound Mix &amp; Recording Real VO &amp; Synthetic VO</div>
+      </div>
+      <div class="work-view">— view —</div>
+    </div>
+
+    <!-- ROW 2 -->
+    <div class="work-item reveal" data-video-url="https://www.youtube.com/embed/dMaeRkWzF5s?si=_DHJJoiHl4sMPCPM" data-client="Advertising" data-title="Amazon — Prime Speed">
+      <div class="work-bg">
+  <img src="https://s13.gifyu.com/images/bqucv.gif" alt="Amazon Prime Speed">
+</div>
+      <div class="work-overlay">
+        <div class="work-client">Advertising</div>
+        <div class="work-title">Amazon - Prime Speed</div>
+        <div class="work-role">VO recording &amp; Sound Design &amp; Mix</div>
+      </div>
+      <div class="work-view">— view —</div>
+    </div>
+
+    <div class="work-item reveal" data-video-url="https://player.vimeo.com/video/1183424482?" data-client="Advertising" data-title="Audio Reel">
+      <div class="work-bg">
+  <img src="https://s13.gifyu.com/images/bqWmM.gif" alt="Audio Highlights">
+</div>
+      <div class="work-overlay">
+        <div class="work-client">Advertising</div>
+        <div class="work-title">Audio Highlights Reel</div>
+        <div class="work-role">VO recording &amp; Sound Design &amp; Creative &amp; Sound Mix</div>
+      </div>
+      <div class="work-view">— view —</div>
+    </div>
+
+    <div class="work-item reveal" data-video-url="https://player.vimeo.com/video/1183323975?" data-client="Advertising" data-title="Playstation Localisation">
+      <div class="work-bg">
+  <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdTVjMmpvMmhwdWF6cGRzNjE1djVrbjlhbGthcXJ6eXZlZWY4ZXVvZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/dKTJvjV16COKNAhLJV/giphy.gif" alt="Playstation Localisation">
+</div>
+      <div class="work-overlay">
+        <div class="work-client">Advertising</div>
+        <div class="work-title">Playstation Localisation</div>
+        <div class="work-role">Sound Mix</div>
+      </div>
+      <div class="work-view">— view —</div>
+    </div>
+
+  </section>
+
+  <!-- ABOUT -->
+  <div id="about" class="section-label" style="padding-top:3rem;">— About</div>
+  <section class="about-section">
+    <div class="about-text">
+      <h2 class="reveal-left">Sound that <em>moves</em> people.</h2>
+      <p class="reveal">Matt Hollis is a freelance audio engineer and mixer based in the UK, working across advertising, broadcast, documentary and film. With a keen ear for detail and a collaborative approach, every project receives the full sonic attention it deserves.</p>
+      <p class="reveal">From intimate documentary mixes to high-profile commercial campaigns, the work spans a broad range of formats — always with the same commitment to craft and storytelling through sound.</p>
+      <p class="reveal">Clients range from leading advertising agencies and production companies to independent filmmakers and broadcasters. Whether working in the studio or remotely, the goal is always the same: sound that elevates the work.</p>
+      <a class="about-link" href="#contact">Get in touch &rarr;</a>
+    </div>
+    <div class="about-stats">
+      <div class="stat">
+        <div class="stat-num">14+</div>
+        <div class="stat-label">Years experience</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">200+</div>
+        <div class="stat-label">Projects completed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">30+</div>
+        <div class="stat-label">Clients worldwide</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLIENTS -->
+  <div class="clients-section">
+    <span class="clients-label">Clients include</span>
+    <div class="clients-divider"></div>
+    <span class="client-name">Amazon</span>
+    <span class="client-name">Mars Inc</span>
+    <span class="client-name">Nissan</span>
+    <span class="client-name">PlayStation</span>
+    <span class="client-name">Kenvue</span>
+    <span class="client-name">LEGO</span>
+    <span class="client-name">P&G</span>
+    <span class="client-name">Essity</span>
+     <span class="client-name">PespiCo</span>
+     <span class="client-name">Philips</span>
+     <span class="client-name">Mercedes</span>
+    <span class="client-name">Kraken</span>
+    <span class="client-name">Enterprise</span>
+  </div>
+
+  <!-- CONTACT -->
+  <div id="contact" class="section-label" style="padding-top:3rem;">— Contact</div>
+  <section class="contact-section">
+    <div class="contact-left">
+      <h2 class="reveal-left">Let's make <span>something</span> great.</h2>
+      <p>Available for freelance projects, ongoing collaborations and remote work worldwide. Get in touch to discuss your next project.</p>
+      <a class="contact-btn" href="mailto:mattehollis@gmail.com">Get in touch</a>
+    </div>
+    <div class="contact-right">
+      <div class="contact-detail">
+        <div class="contact-detail-label">Email</div>
+        <div class="contact-detail-val" >mattehollis@gmail.com</div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-label">Based in</div>
+        <div class="contact-detail-val">United Kingdom</div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-label">Available for</div>
+        <div class="contact-detail-val">Freelance &middot; Remote</div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-label">Follow</div>
+        <div class="contact-detail-val">
+          <a href="https://www.linkedin.com/in/matthew-hollis-25387b3b" style="color:inherit;text-decoration:none;border-bottom:0.5px solid rgba(255,255,255,0.15);padding-bottom:1px;">LinkedIn</a>
+          &nbsp;&middot;&nbsp;
+          <a href="https://vimeo.com/user257092800?fl=pp&fe=sh" style="color:inherit;text-decoration:none;border-bottom:0.5px solid rgba(255,255,255,0.15);padding-bottom:1px;">Vimeo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">
+      <svg viewBox="0 0 28 28" fill="none">
+          <circle cx="14" cy="14" r="11" stroke="#F5C842" stroke-width="1.2"/>
+          <path d="M2 14 L5 14 L6.5 9 L8 19 L9.5 6 L11 22 L12.5 11 L14 17 L15.5 5 L17 23 L18.5 12 L20 16 L21.5 14 L26 14"
+            stroke="#F5C842" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+     
+      </svg>
+      <span class="footer-name">Matt Hollis Audio Services</span>
+    </div>
+    <div class="footer-copy">&copy; 2026 Matt Hollis Audio Services. All rights reserved.</div>
+  </footer>
+
+  <!-- VIDEO MODAL -->
+  <div class="video-modal-backdrop" id="videoModal">
+    <div class="video-modal">
+      <div class="video-modal-header">
+        <div class="video-modal-meta">
+          <div class="video-modal-client" id="modalClient"></div>
+          <div class="video-modal-title" id="modalTitle"></div>
+        </div>
+        <button class="video-modal-close" id="modalClose" aria-label="Close">&#x2715;</button>
+      </div>
+      <div class="video-modal-body" id="modalBody">
+        <!-- iframe injected here by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGO DRAW-IN ANIMATION
+       Circle (553 units) draws first over 0.9s.
+       Baseline (176 units) follows at 380ms over 0.5s.
+       Waveform (960 units) follows at 680ms over 1.2s.
+  -->
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    window.addEventListener('DOMContentLoaded', function () {
+      var circle = document.getElementById('lc');
+      var line   = document.getElementById('ll');
+      var wave   = document.getElementById('lw');
+
+      circle.style.transition = 'stroke-dashoffset 0.9s cubic-bezier(0.4, 0, 0.2, 1)';
+      line.style.transition   = 'stroke-dashoffset 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+      wave.style.transition   = 'stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1)';
+
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          circle.style.strokeDashoffset = '0';
+          setTimeout(function () { line.style.strokeDashoffset = '0'; }, 380);
+          setTimeout(function () { wave.style.strokeDashoffset = '0'; }, 680);
+        });
+      });
+    });
+
+    // ── VIDEO MODAL ──
+    (function () {
+      var backdrop = document.getElementById('videoModal');
+      var modalBody   = document.getElementById('modalBody');
+      var modalClient = document.getElementById('modalClient');
+      var modalTitle  = document.getElementById('modalTitle');
+      var closeBtn    = document.getElementById('modalClose');
+
+      function openModal(item) {
+        var url    = item.getAttribute('data-video-url');
+        var client = item.getAttribute('data-client');
+        var title  = item.getAttribute('data-title');
+
+        modalClient.textContent = client;
+        modalTitle.textContent  = title;
+
+        // Clear previous
+        modalBody.innerHTML = '';
+
+        if (url && url !== 'YOUR_YOUTUBE_OR_VIMEO_EMBED_URL_HERE') {
+          var iframe = document.createElement('iframe');
+          iframe.src = url + (url.indexOf('?') > -1 ? '&' : '?') + 'autoplay=1';
+          iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+          iframe.allowFullscreen = true;
+          modalBody.appendChild(iframe);
+        } else {
+          // Placeholder state
+          modalBody.innerHTML = [
+            '<div class="video-modal-placeholder">',
+            '  <svg width="48" height="48" viewBox="0 0 48 48" fill="none">',
+            '    <circle cx="24" cy="24" r="22" stroke="#F5C842" stroke-width="1.2"/>',
+            '    <polygon points="19,16 35,24 19,32" fill="#F5C842" opacity="0.5"/>',
+            '  </svg>',
+            '  <p>Add your YouTube or Vimeo embed URL to data-video-url</p>',
+            '</div>'
+          ].join('');
+        }
+
+        backdrop.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal() {
+        backdrop.classList.remove('open');
+        document.body.style.overflow = '';
+        // Stop video
+        modalBody.innerHTML = '';
+      }
+
+      // Attach click to all work items
+      document.querySelectorAll('.work-item').forEach(function (item) {
+        item.addEventListener('click', function () { openModal(item); });
+      });
+
+      closeBtn.addEventListener('click', closeModal);
+
+      backdrop.addEventListener('click', function (e) {
+        if (e.target === backdrop) closeModal();
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeModal();
+      });
+    })();
+    // ── SCROLL REVEAL ──
+    (function () {
+      var selectors = '.reveal, .reveal-left, .reveal-stagger';
+      var items = document.querySelectorAll(selectors);
+
+      if (!items.length) return;
+
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      items.forEach(function (el) { observer.observe(el); });
+    })();
+  </script>
+</body>
+</html>
