@@ -140,7 +140,7 @@
     }
     .hero-tagline span { color: var(--gold); margin: 0 0.6rem; }
     .hero-scroll {
-      position: absolute; bottom: 2.5rem; left: 0; right: 0;
+      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
       display: flex; flex-direction: column; align-items: center; gap: 8px;
       opacity: 0.35; animation: fadeUp 0.7s 2.6s ease both;
     }
@@ -344,7 +344,7 @@
     }
 
   /* ───────────────────────────────
-   CLIENT LOGO MARQUEE
+   CLIENT LOGO MARQUEE (V3 PREMIUM)
 ─────────────────────────────── */
 
 .clients-section{
@@ -356,119 +356,68 @@
   background:linear-gradient(180deg,#080808 0%,#0b0b0b 100%);
 }
 
-.clients-header{
-  text-align:center;
-  margin-bottom:2.5rem;
-  padding:0 2rem;
-}
-
-.clients-label{
-  display:block;
-  color:var(--gold);
-  text-transform:uppercase;
-  letter-spacing:.35em;
-  font-size:.78rem;
-  font-weight:700;
-  margin-bottom:1rem;
-}
-
-.clients-header p{
-  color:var(--text-mid);
-  font-size:.78rem;
-  font-weight:300;
-  letter-spacing:.08em;
-}
+.clients-header{text-align:center;margin-bottom:2.5rem;padding:0 2rem;}
+.clients-label{display:block;color:var(--gold);text-transform:uppercase;letter-spacing:.35em;font-size:.78rem;font-weight:700;margin-bottom:1rem;}
+.clients-header p{color:var(--text-mid);font-size:.78rem;font-weight:300;letter-spacing:.08em;}
 
 .clients-marquee{
   position:relative;
   overflow:hidden;
-}
-
-/* Fade edges */
-.clients-marquee::before,
-.clients-marquee::after{
-  content:"";
-  position:absolute;
-  top:0;
-  width:140px;
-  height:100%;
-  z-index:2;
-  pointer-events:none;
-}
-
-.clients-marquee::before{
-  left:0;
-  background:linear-gradient(to right,#080808,transparent);
-}
-
-.clients-marquee::after{
-  right:0;
-  background:linear-gradient(to left,#080808,transparent);
+  width:100%;
+  padding:10px 0;
+  mask-image:linear-gradient(to right,transparent,black 8%,black 92%,transparent);
+  -webkit-mask-image:linear-gradient(to right,transparent,black 8%,black 92%,transparent);
 }
 
 .clients-track{
   display:flex;
   align-items:center;
-  gap:90px;
+  gap:88px;
   width:max-content;
-  animation:logoScroll 38s linear infinite;
+  will-change:transform;
+  transform:translate3d(0,0,0);
+  animation:logoScroll 65s linear infinite;
 }
 
-.clients-track:hover{
-  animation-play-state:paused;
-}
+.clients-track:hover{animation-play-state:paused;}
 
-.clients-track .logo-mask{
-  height:34px;
-  width:auto;
+.logo-mask{
   flex:0 0 auto;
-  background-color:#ffffff;
-  opacity:.55;
+  height:36px;
+  width:auto;
+  background:rgba(255,255,255,.48);
+  opacity:.72;
+  transform-origin:center;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  transform:translateZ(0);
+  -webkit-transform:translateZ(0);
+  will-change:transform,opacity;
   -webkit-mask-repeat:no-repeat;
   mask-repeat:no-repeat;
   -webkit-mask-size:contain;
   mask-size:contain;
   -webkit-mask-position:center;
   mask-position:center;
-  transition:opacity .35s ease, transform .35s ease, background-color .35s ease;
+  transition:opacity .35s ease,transform .35s ease,background-color .35s ease;
 }
-
-.clients-track .logo-mask:hover{
+.logo-mask:nth-child(3n){opacity:.5;}
+.logo-mask:nth-child(4n){opacity:.6;}
+.logo-mask:hover{
   opacity:1;
-  transform:scale(1.08);
-  background-color:var(--gold);
+  background:var(--gold);
+  transform:translateY(-2px) translateZ(0) scale(1.04);
 }
-
 @keyframes logoScroll{
-  from{
-    transform:translateX(0);
-  }
-  to{
-    transform:translateX(-50%);
-  }
+  from{transform:translate3d(0,0,0);}
+  to{transform:translate3d(-50%,0,0);}
 }
-
 @media (max-width:768px){
-
-  .clients-section{
-    padding:2.5rem 0;
-  }
-
-  .clients-track{
-    gap:55px;
-    animation-duration:28s;
-  }
-
-  .clients-track .logo-mask{
-    height:24px;
-  }
-
-  .clients-marquee::before,
-  .clients-marquee::after{
-    width:70px;
-  }
-
+  .clients-section{padding:2.5rem 0;}
+  .clients-track{gap:60px;animation-duration:48s;}
+  .logo-mask{height:28px;}
 }
+
 
     /* ── CONTACT ── */
     .contact-section {
